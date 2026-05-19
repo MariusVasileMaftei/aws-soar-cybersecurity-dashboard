@@ -2,3 +2,4 @@
 backend_simulator/
 __pycache__/
 *.pyc
+config.js

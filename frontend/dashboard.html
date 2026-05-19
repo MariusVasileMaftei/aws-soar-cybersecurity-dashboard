@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOAR Security Incident Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="../config.js"></script>
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <div class="navbar">🛡️ SOAR Central Automation & Cybersecurity Audit Dashboard</div>
+    <div class="container">
+        <div class="stats-grid">
+            <div class="card">
+                <h3>Total Tentative Inregistrate</h3>
+                <p id="stat-total">0</p>
+            </div>
+            <div class="card">
+                <h3>Autentificari Reusite</h3>
+                <p id="stat-success" class="txt-success">0</p>
+            </div>
+            <div class="card danger">
+                <h3>Tentative Esuate (Brute-Force Vector)</h3>
+                <p id="stat-failed" class="txt-danger">0</p>
+            </div>
+        </div>
+        
+        <div class="table-header">
+            <h2>Loguri Evenimente în Timp Real (SIEM Input Link)</h2>
+            <button class="btn" onclick="exportSOCReport()">📥 Genereaza Raport Audit S3</button>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Eveniment</th>
+                    <th>Utilizator</th>
+                    <th>Timestamp Audit</th>
+                    <th>Status Autentificare</th>
+                    <th>Mesaj Detaliat Eroare / Succes</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tr>
+                    <td colspan="5" class="loading">Se încarcă telemetria din cloud...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

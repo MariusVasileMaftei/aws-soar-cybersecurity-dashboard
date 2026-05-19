@@ -1,68 +1,67 @@
-// Variable to store the resolved backend URL destination
-let targetApiUrl = "";
+let baseApiUrl = "";
 
-/**
- * Validates environmental layers to secure the correct API endpoint
- */
 function resolveApi() {
     if (window.env && window.env.API_URL) return window.env.API_URL;
     if (typeof API_BASE_URL !== 'undefined') return API_BASE_URL;
     return null;
 }
 
-// Event listener to capture form submission and push security telemetry
 document.getElementById('authForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     
     const feedback = document.getElementById('feedback');
     feedback.style.display = 'none';
     
-    // Resolve the API URL dynamic endpoint if not cached locally
-    if (!targetApiUrl) targetApiUrl = resolveApi();
+    if (!baseApiUrl) baseApiUrl = resolveApi();
     
-    if (!targetApiUrl) {
+    if (!baseApiUrl) {
         feedback.className = "alert alert-danger";
-        feedback.innerText = "Error: API URL configuration endpoint missing.";
+        feedback.innerText = "Error: API URL endpoint configuration missing.";
         feedback.style.display = 'block';
         return;
     }
 
-    // Generate a random unique event ID mimicry (SIEM payload structure)
-    const eventId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const username = document.getElementById('username').value.trim();
-    const status = document.getElementById('status').value;
-    const timestamp = Math.floor(Date.now() / 1000);
-
-    // Build automated forensic log strings details based on status
-    let details = "User verification completed via web portal.";
-    if (status === 'FAILED') {
-        details = "Authentication failure: Invalid credential token payload submitted for password field.";
+    // Ensure the endpoint hits the precise /login route mapped in API Gateway
+    let targetUrl = baseApiUrl;
+    if (!targetUrl.endsWith('/login')) {
+        targetUrl = targetUrl.endsWith('/') ? `${targetUrl}login` : `${targetUrl}/login`;
     }
 
-    // Wrap the payload structure exactly how our Lambda handler expects it
-    const payload = { eventId, username, timestamp, status, details };
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    const payload = { username, password };
 
     try {
-        const response = await fetch(`${targetApiUrl}`, {
+        const response = await fetch(targetUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
-        if (response.ok) {
+        const data = await response.json();
+
+        feedback.style.display = 'block';
+        
+        if (response.status === 200 && data.status === "SUCCESS") {
             feedback.className = "alert alert-success";
-            feedback.innerText = `Event dispatched! Status: ${status}. Dashboard notified.`;
+            feedback.innerText = `Access Granted! Token generated successfully.`;
             
-            // Reset input values for subsequent simulation testing
+            // Clear credentials from view inputs
             document.getElementById('username').value = "";
             document.getElementById('password').value = "";
+        } else if (response.status === 403) {
+            // Brute-force block threshold active
+            feedback.className = "alert alert-danger";
+            feedback.innerText = `SECURITY ALERT: ${data.message}`;
         } else {
-            throw new Error(`API Gateway returned HTTP Status ${response.status}`);
+            // Captures Cognito native rejections (e.g., "Incorrect username or password.")
+            feedback.className = "alert alert-danger";
+            feedback.innerText = `Access Denied: ${data.message || "Authentication failed"}`;
         }
     } catch (err) {
         feedback.className = "alert alert-danger";
-        feedback.innerText = `Ingestion Failed: ${err.message}`;
+        feedback.innerText = `Network Ingestion Failure: ${err.message}`;
+        feedback.style.display = 'block';
     }
-    
-    feedback.style.display = 'block';
 });

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise Access Control - SIEM Emulator</title>
-    
     <link rel="stylesheet" href="./style_login.css">
     
     <script src="./config.js"></script>
@@ -19,20 +18,13 @@
     <form id="authForm">
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" placeholder="e.g., marius, alice" required>
+            <input type="text" id="username" placeholder="Enter pool username" required>
         </div>
         <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" placeholder="••••••••" required>
         </div>
-        <div class="form-group">
-            <label for="status">Expected Auth Outcome (Simulated Vector)</label>
-            <select id="status">
-                <option value="SUCCESS">SUCCESS (Legitimate Login)</option>
-                <option value="FAILED">FAILED (Wrong Password / Attack Attempt)</option>
-            </select>
-        </div>
-        <button type="submit">Submit Authentication Event</button>
+        <button type="submit">Log In</button>
     </form>
     
     <div id="feedback" class="alert"></div>

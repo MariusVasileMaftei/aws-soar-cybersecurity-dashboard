@@ -93,11 +93,17 @@ async function exportSOCReport() {
     }
 
     try {
-        const response = await fetch(`${targetApiUrl}/report`);
+        // Bypassing /report by using the proven /events route with a query parameter
+        const response = await fetch(`${targetApiUrl}/events?download=true`);
         if (!response.ok) throw new Error("Cloud report compilation handshake failed.");
         
         const data = await response.json();
-        window.open(data.downloadUrl, '_blank');
+        if (data.downloadUrl) {
+            window.open(data.downloadUrl, '_blank');
+        } else {
+            console.error("Download URL missing from response payload:", data);
+            alert("S3 URL generation error. Check backend configuration.");
+        }
     } catch (error) {
         console.error("[SOAR PLAYBOOK ERROR] Forensic report generation failed:", error);
         alert("S3 Forensic Export Failed: Check console security logs.");

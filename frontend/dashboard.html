@@ -4,54 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOAR Central Automation & Cybersecurity Audit Dashboard</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style_dashboard.css">
     <script src="./config.js"></script>
     <script src="./env.js"></script>
-    <script src="./app.js" defer></script>
+    <script src="./app_dashboard.js" defer></script>
 </head>
 <body>
 
-<div class="dashboard-header">
-    <h1>🛡️ SOAR Central Automation & Cybersecurity Audit Dashboard</h1>
+<div class="navbar">
+    🛡️ SOAR Central Automation & Cybersecurity Audit Dashboard
 </div>
 
-<div class="metrics-container">
-    <div class="card metric-total">
-        <h3>TOTAL LOGGED EVENTS</h3>
-        <div id="totalEvents" class="metric-value">0</div>
-    </div>
-    <div class="card metric-success">
-        <h3>SUCCESSFUL AUTHENTICATIONS</h3>
-        <div id="successEvents" class="metric-value">0</div>
-    </div>
-    <div class="card metric-failed">
-        <h3>FAILED ATTEMPTS (BRUTE-FORCE VECTOR)</h3>
-        <div id="failedEvents" class="metric-value">0</div>
-    </div>
-</div>
+<div class="container">
 
-<div class="table-section-header">
-    <h2>📋 Real-Time Event Logs (SIEM Ingestion Stream)</h2>
-    <button id="generateReportBtn" class="btn-report">📊 Generate S3 Audit Report</button>
-</div>
+    <div class="stats-grid">
+        <div class="card">
+            <h3>Total Logged Events</h3>
+            <p id="totalEvents">0</p>
+        </div>
+        <div class="card">
+            <h3>Successful Authentications</h3>
+            <p id="successEvents" class="txt-success">0</p>
+        </div>
+        <div class="card danger">
+            <h3>Failed Attempts (Brute-Force Vector)</h3>
+            <p id="failedEvents" class="txt-danger">0</p>
+        </div>
+    </div>
 
-<div class="table-container">
+    <div class="table-header">
+        <h2>📋 Real-Time Event Logs (SIEM Ingestion Stream)</h2>
+        <button id="generateReportBtn" class="btn">📊 Generate S3 Audit Report</button>
+    </div>
+
     <table>
         <thead>
             <tr>
-                <th>EVENT ID</th>
-                <th>USERNAME</th>
-                <th>AUDit TIMESTAMP</th>
-                <th>AUTH STATUS</th>
-                <th>RISK LEVEL</th>
-                <th>IP ADDRESS</th>
-                <th>MAC ADDRESS</th>
-                <th>DETAILED FORENSIC MESSAGE</th>
+                <th>Event ID</th>
+                <th>Username</th>
+                <th>Audit Timestamp</th>
+                <th>Auth Status</th>
+                <th>Risk Level</th>
+                <th>IP Address</th> <th>Detailed Forensic Message</th>
             </tr>
         </thead>
         <tbody id="logTableBody">
             </tbody>
     </table>
+
 </div>
 
 </body>
